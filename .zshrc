@@ -1,4 +1,5 @@
 # load zgenom
+# new install? install here https://github.com/jandamm/zgenom
 source "${HOME}/.zgenom/zgenom.zsh"
 
 # Check for plugin and zgenom updates every 7 days
