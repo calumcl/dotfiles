@@ -77,3 +77,8 @@ source ${HOME}/zsh/themes/headline.zsh-theme
 
 eval "$(zoxide init zsh --cmd j)"
 alias config='/usr/bin/git --git-dir=/home/calum/.cfg/ --work-tree=/home/calum'
+
+export PATH=${PATH}:$HOME/.local/bin/hlint:$HOME/.local/bin:$HOME/.emacs.d/bin:$(yarn global bin):$HOME/.local/share/JetBrains/Toolbox/bin
+# android path stuff
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=${PATH}:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools
