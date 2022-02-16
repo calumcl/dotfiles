@@ -7,11 +7,6 @@ import time
 
 from newm.layout import Layout
 
-from newm import (
-    SysBackendEndpoint_alsa,
-    SysBackendEndpoint_sysfs
-)
-
 from pywm import (
     PYWM_MOD_LOGO,
     # PYWM_MOD_ALT
@@ -87,18 +82,6 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
 
     ]
 
-sys_backend_endpoints = [
-    SysBackendEndpoint_sysfs(
-        "backlight",
-        "/sys/class/backlight/intel_backlight/brightness",
-        "/sys/class/backlight/intel_backlight/max_brightness"),
-    SysBackendEndpoint_sysfs(
-        "kbdlight",
-        "/sys/class/leds/smc::kbd_backlight/brightness",
-        "/sys/class/leds/smc::kbd_backlight/max_brightness"),
-    SysBackendEndpoint_alsa(
-        "volume")
-]
 bar = {
     'enabled': False,
     'top_texts': lambda: [
