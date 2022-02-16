@@ -22,20 +22,20 @@ mod = PYWM_MOD_LOGO
 
 def on_startup():
     def on_startup():
-    init_service = (
-        "systemctl --user import-environment \
-        DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
-        "hash dbus-update-activation-environment 2>/dev/null && \
-        dbus-update-activation-environment --systemd \
-        DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
-        "wl-paste -t text --watch clipman store",
-        "waybar",
-        "nm-applet --indicator",
-    )
+        init_service = (
+            "systemctl --user import-environment \
+            DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
+            "hash dbus-update-activation-environment 2>/dev/null && \
+            dbus-update-activation-environment --systemd \
+            DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
+            "wl-paste -t text --watch clipman store",
+            "waybar",
+            "nm-applet --indicator",
+        )
 
-    for service in init_service:
-        service = f"{service} &"
-        os.system(service)
+        for service in init_service:
+            service = f"{service} &"
+            os.system(service)
 
 term = 'kitty'
 
@@ -64,10 +64,10 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("M-C-l", lambda: layout.resize_focused_view(1, 0)),
 
         ("M-Return", lambda: os.system(f"{term} &")),
-        ("M-r", lambda: os.system("rofi -show run &"),
-        ("M-c", lambda: os.system("google-chrome"),
-        ("XF86MonBrightnessUp", lambda: os.system("light -A 5"),
-        ("XF86MonBrightnessUp", lambda: os.system("light -U 5"),
+        ("M-r", lambda: os.system("rofi -show run &")),
+        ("M-c", lambda: os.system("google-chrome")),
+        ("XF86MonBrightnessUp", lambda: os.system("light -A 5")),
+        ("XF86MonBrightnessUp", lambda: os.system("light -U 5")),
         ("XF86AudioRaiseVolume", lambda: os.system("amixer set Master 5%+")),
         ("XF86AudioLowerVolume", lambda: os.system("amixer set Master 5%-")),
         ("XF86AudioPlay", lambda: os.system("playerctl play-pause &")),
@@ -84,6 +84,7 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("Print", lambda: os.system('grim ~/screen-"$(date +%s)".png &')),
         ("M-Print", lambda: os.system('grim -g "$(slurp)" ~/screen-"$(date\
             +%s)".png &'))
+
     ]
 
 sys_backend_endpoints = [
