@@ -6,6 +6,7 @@ import pwd
 import time
 
 from newm.layout import Layout
+from newm.helper import WobRunner, PaCtl
 
 from pywm import (
     PYWM_MOD_LOGO,
@@ -16,26 +17,39 @@ from pywm import (
 mod = PYWM_MOD_LOGO
 
 def on_startup():
-    def on_startup():
-        init_service = (
-            "systemctl --user import-environment \
-            DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
-            "hash dbus-update-activation-environment 2>/dev/null && \
-            dbus-update-activation-environment --systemd \
-            DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
-            "wl-paste -t text --watch clipman store",
-            "waybar",
-            "nm-applet --indicator",
-        )
+    os.system("waybar &")
+    init_service = (
+        "systemctl --user import-environment \
+        DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
+        "hash dbus-update-activation-environment 2>/dev/null && \
+        dbus-update-activation-environment --systemd \
+        DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
+        "wl-paste -t text --watch clipman store",
+        "nm-applet --indicator",
+    )
 
-        for service in init_service:
-            service = f"{service} &"
-            os.system(service)
+    for service in init_service:
+        service = f"{service} &"
+        os.system(service)
 
 term = 'kitty'
 
+wob_runner = WobRunner("wob -a top -M 100")
+pactl = PaCtl(0, wob_runner)
 
 def on_reconfigure():
+    gnome_schema = 'org.gnome.desktop.interface'
+    wm_service_extra_config = (
+        f"gsettings set {gnome_schema} gtk-theme 'Materia-compact'",  # change to the theme of your choice
+        f"gsettings set {gnome_schema} icon-theme 'Papirus'",  # change to the icon of your choice
+        f"gsettings set {gnome_schema} cursor-theme 'Adwaita'",  # change to the cursor of your choice
+        f"gsettings set {gnome_schema} font-name 'Cantarell 10'",  # change to the font of your choice
+    )
+
+    for config in wm_service_extra_config:
+        config = f"{config} &"
+        os.system(config)
+    
     os.system("notify-send newm \"Reloaded configuration\" &")
 
 def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
@@ -59,14 +73,14 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("M-C-l", lambda: layout.resize_focused_view(1, 0)),
 
         ("M-Return", lambda: os.system(f"{term} &")),
-        ("M-r", lambda: os.system("rofi -show run &")),
+        ("M-r", lambda: os.system("wofi &")),
         ("M-c", lambda: os.system("google-chrome")),
         ("XF86MonBrightnessUp", lambda: os.system("light -A 5")),
         ("XF86MonBrightnessUp", lambda: os.system("light -U 5")),
-        ("XF86AudioRaiseVolume", lambda: os.system("amixer set Master 5%+")),
-        ("XF86AudioLowerVolume", lambda: os.system("amixer set Master 5%-")),
+        ("XF86AudioRaiseVolume", lambda: pactl.volume_adj(5)),
+        ("XF86AudioLowerVolume", lambda: pactl.volume_adj(-5)),
         ("XF86AudioPlay", lambda: os.system("playerctl play-pause &")),
-        ("XF86AudioMute", lambda: os.system("amixer set Master toggle")),
+        ("XF86AudioMute", lambda: pactl.mute()),
         ("M-q", lambda: layout.close_focused_view()),
 
         ("M-p", lambda: layout.ensure_locked(dim=True)),
@@ -82,19 +96,42 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
 
     ]
 
-bar = {
-    'enabled': False,
-    'top_texts': lambda: [
-        pwd.getpwuid(os.getuid())[0],
-        time.strftime("%c"),
-        "%d%% %s" % (psutil.sensors_battery().percent, "↑" if
-                     psutil.sensors_battery().power_plugged else "↓")
-    ],
-    'bottom_texts': lambda: [
-        "CPU: %d%%" % psutil.cpu_percent(interval=1),
-        get_nw(),
-        "RAM: %d%%" % psutil.virtual_memory().percent
-    ]
+panels = {
+    'lock': {
+        'cmd': f'{term} newm-panel-basic lock',
+        'w': 0.7,
+        'h': 0.7,
+        'corner_radius': 50,
+    },
+}
+
+bar = {'enabled': False}
+
+def rules(view):
+    common_rules = {
+        'float': True,
+        'float_size': (750, 750),
+        'float_pos': (0.5, 0.35)
+    }
+    float_apps = (
+        "pavucontrol", "blueman-manager"
+    )
+    blur_apps = (
+        "kitty", "wofi", "waybar"
+    )
+    if view.app_id in float_apps:
+        return common_rules
+    if view.app_id in blur_apps:
+        return {'blur': {'radius': 5, 'passes': 3}}
+    return None
+
+
+view = {
+    'padding': 6,
+    'fullscreen_padding': 0,
+    'send_fullscreen': False,
+    'rules': rules,
+    'floating_min_size': False
 }
 
 background = {
@@ -103,7 +140,7 @@ background = {
 }
 
 outputs = [
-    { 'name': 'eDP-1', 'scale': 2. }
+    { 'name': 'eDP-1', 'scale': 1 }
 ]
 
 pywm = {
