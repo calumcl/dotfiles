@@ -10,7 +10,7 @@ from newm.helper import WobRunner, PaCtl
 
 from pywm import (
     PYWM_MOD_LOGO,
-    # PYWM_MOD_ALT
+    PYWM_MOD_ALT
 )
 
 
@@ -49,7 +49,6 @@ def on_reconfigure():
     for config in wm_service_extra_config:
         config = f"{config} &"
         os.system(config)
-    
     os.system("notify-send newm \"Reloaded configuration\" &")
 
 def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
@@ -114,7 +113,7 @@ def rules(view):
         'float_pos': (0.5, 0.35)
     }
     float_apps = (
-        "pavucontrol", "blueman-manager"
+        "pavucontrol", "blueman-manager", "gnome-control-center"
     )
     blur_apps = (
         "kitty", "wofi", "waybar"

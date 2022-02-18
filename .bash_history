@@ -253,3 +253,10 @@ echo $SHELL
 snap
 snap run 
 snap run authy
+source /home/calum/anaconda3/bin/activate
+conda activate cs-310
+zsh
+exit
+source /home/calum/anaconda3/bin/activate
+conda activate cs-310
+exit
