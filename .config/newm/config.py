@@ -30,7 +30,10 @@ def on_startup():
         "wl-paste -t text --watch clipman store",
         "eval $(gnome-keyring-daemon --start)",
         "export SSH_AUTH_SOCK",
-        "blueman-applet"
+        "blueman-applet",
+        "mattermost-desktop",
+        "caprine",
+        "evolution",
     )
 
     for service in init_service:
@@ -88,8 +91,8 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("M-c", lambda: os.system("google-chrome")),
         ("XF86MonBrightnessDown", lambda: backlight_manager.set(backlight_manager.get() - 0.05)),
         ("XF86MonBrightnessUp", lambda: backlight_manager.set(backlight_manager.get() + 0.05)),
-        ("XF86AudioRaiseVolume", lambda: os.system("amixer sset Master 5%+ | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK")),
-        ("XF86AudioLowerVolume", lambda: os.system("amixer sset Master 5%- | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK")),
+        ("XF86AudioRaiseVolume", lambda: os.system("amixer sset Master 5%+")),
+        ("XF86AudioLowerVolume", lambda: os.system("amixer sset Master 5%-")),
         ("XF86AudioMute", lambda: pactl.mute()),
         ("XF86AudioPlay", lambda: os.system("playerctl play-pause &")),
         ("M-q", lambda: layout.close_focused_view()),
