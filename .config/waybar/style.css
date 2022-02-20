@@ -98,3 +98,7 @@ window#waybar {
     color: #FAEBD7;
     background: #708090;
 }
+
+#custom-notification {
+  font-family: "NotoSansMono Nerd Font";
+}

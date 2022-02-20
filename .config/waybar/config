@@ -4,16 +4,23 @@
     "height": 24, // Waybar height
     // "width": 1366, // Waybar width
     // Choose the order of the modules
-    "modules-left": ["cpu", "memory", "custom/settings"],
+    "modules-left": ["cpu", "memory", "custom/notification"],
     "modules-center": ["custom/waybar-mpris"],
     "modules-right": ["pulseaudio", "network", "backlight", "battery", "tray", "clock"],
     "tray": {
         // "icon-size": 21,
         "spacing": 10
     },
-    "custom/settings": {
-        "on-click": "gnome-control-center",
-        "format": "Open Settings ⚙",
+    "custom/notification": {
+        "format": "{icon} {}",
+        "return-type": "string",
+        "max-length": 10,
+        "interval": 10,
+        "format-icons": {
+            "default": "🔔"
+        },
+        "exec": "swaync-client -c | grep -vw 0",
+        "on-click": "swaync-client -t -sw"
     },
     "clock": {
         "format-alt": "{:%Y-%m-%d}"
@@ -38,15 +45,13 @@
         "format": "{capacity}% {icon}",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
-        "format-icons": ["", "", "", "", ""],
-        "on-click": "gnome-control-center power"
+        "format-icons": ["", "", "", "", ""]
     },
     "network": {
         // "interface": "wlp2s0", // (Optional) To force the use of this interface
         "format-wifi": "{essid} ({signalStrength}%) ",
         "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
-        "format-disconnected": "Disconnected ⚠",
-        "on-click": "gnome-control-center wifi"
+        "format-disconnected": "Disconnected ⚠"
     },
     "pulseaudio": {
         //"scroll-step": 1,

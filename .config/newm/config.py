@@ -6,7 +6,7 @@ import pwd
 import time
 
 from newm.layout import Layout
-from newm.helper import WobRunner, PaCtl
+from newm.helper import BacklightManager, WobRunner, PaCtl
 
 from pywm import (
     PYWM_MOD_LOGO,
@@ -17,15 +17,20 @@ from pywm import (
 mod = PYWM_MOD_LOGO
 
 def on_startup():
+    os.system("swaync &")
     os.system("waybar &")
+    os.system("nm-applet --indicator &")
     init_service = (
+        "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1",
         "systemctl --user import-environment \
         DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
         "hash dbus-update-activation-environment 2>/dev/null && \
         dbus-update-activation-environment --systemd \
         DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP",
         "wl-paste -t text --watch clipman store",
-        "nm-applet --indicator",
+        "eval $(gnome-keyring-daemon --start)",
+        "export SSH_AUTH_SOCK",
+        "blueman-applet"
     )
 
     for service in init_service:
@@ -36,6 +41,7 @@ term = 'kitty'
 
 wob_runner = WobRunner("wob -a top -M 100")
 pactl = PaCtl(0, wob_runner)
+backlight_manager = BacklightManager(anim_time=1., bar_display=wob_runner)
 
 def on_reconfigure():
     gnome_schema = 'org.gnome.desktop.interface'
@@ -51,6 +57,11 @@ def on_reconfigure():
         os.system(config)
     os.system("notify-send newm \"Reloaded configuration\" &")
 
+
+def synchronous_update() -> None:
+    backlight_manager.update()
+
+
 def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
     return [
         ("M-h", lambda: layout.move(-1, 0)),
@@ -59,6 +70,7 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("M-l", lambda: layout.move(1, 0)),
         ("M-u", lambda: layout.basic_scale(1)),
         ("M-n", lambda: layout.basic_scale(-1)),
+        ("M-N", lambda: os.system("swaync-client -t -sw &")),
         ("M-t", lambda: layout.move_in_stack(1)),
 
         ("M-H", lambda: layout.move_focused_view(-1, 0)),
@@ -74,12 +86,12 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("M-Return", lambda: os.system(f"{term} &")),
         ("M-r", lambda: os.system("wofi &")),
         ("M-c", lambda: os.system("google-chrome")),
-        ("XF86MonBrightnessUp", lambda: os.system("light -A 5")),
-        ("XF86MonBrightnessUp", lambda: os.system("light -U 5")),
-        ("XF86AudioRaiseVolume", lambda: pactl.volume_adj(5)),
-        ("XF86AudioLowerVolume", lambda: pactl.volume_adj(-5)),
-        ("XF86AudioPlay", lambda: os.system("playerctl play-pause &")),
+        ("XF86MonBrightnessDown", lambda: backlight_manager.set(backlight_manager.get() - 0.05)),
+        ("XF86MonBrightnessUp", lambda: backlight_manager.set(backlight_manager.get() + 0.05)),
+        ("XF86AudioRaiseVolume", lambda: os.system("amixer sset Master 5%+ | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK")),
+        ("XF86AudioLowerVolume", lambda: os.system("amixer sset Master 5%- | sed -En 's/.*\[([0-9]+)%\].*/\1/p' | head -1 > $WOBSOCK")),
         ("XF86AudioMute", lambda: pactl.mute()),
+        ("XF86AudioPlay", lambda: os.system("playerctl play-pause &")),
         ("M-q", lambda: layout.close_focused_view()),
 
         ("M-p", lambda: layout.ensure_locked(dim=True)),
@@ -89,9 +101,8 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("M-f", lambda: layout.toggle_fullscreen()),
 
         ("ModPress", lambda: layout.toggle_overview()),
-        ("Print", lambda: os.system('grim ~/screen-"$(date +%s)".png &')),
-        ("M-Print", lambda: os.system('grim -g "$(slurp)" ~/screen-"$(date\
-            +%s)".png &'))
+        ("Print", lambda: os.system('grim ~/Pictures/screen-"$(date +%s)".png &')),
+        ("M-Print", lambda: os.system('grim -g "$(slurp)" ~/Pictures/screen-"$(date\+%s)".png &'))
 
     ]
 
@@ -141,6 +152,11 @@ background = {
 outputs = [
     { 'name': 'eDP-1', 'scale': 1 }
 ]
+
+energy = {
+    'idle_times': [60, 180],
+    'idle_callback': backlight_manager.callback
+}
 
 pywm = {
     'xkb_layout': "gb",
