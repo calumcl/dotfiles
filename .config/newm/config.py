@@ -105,8 +105,8 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
 
         ("ModPress", lambda: layout.toggle_overview()),
         ("Print", lambda: os.system('grim ~/Pictures/screen-"$(date +%s)".png &')),
-        ("M-Print", lambda: os.system('grim -g "$(slurp)" ~/Pictures/screen-"$(date\+%s)".png &'))
-
+        ("M-Print", lambda: os.system('grim -g "$(slurp)" ~/Pictures/screen-$(date +%s).png &')),
+       # ("C-Print", lambda: os.system('grim -t png -g "$(slurp -d)" - | wl-copy -t image/png')),
     ]
 
 panels = {
