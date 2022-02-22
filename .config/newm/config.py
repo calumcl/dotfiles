@@ -34,6 +34,7 @@ def on_startup():
         "mattermost-desktop",
         "caprine",
         "evolution",
+        "battery-low-notify",
     )
 
     for service in init_service:
@@ -87,21 +88,22 @@ def key_bindings(layout: Layout) -> list[tuple[str, Callable[[], Any]]]:
         ("M-C-l", lambda: layout.resize_focused_view(1, 0)),
 
         ("M-Return", lambda: os.system(f"{term} &")),
-        ("M-r", lambda: os.system("wofi &")),
+        ("M-r", lambda: os.system("wofi --show=drun &")),
         ("M-c", lambda: os.system("google-chrome")),
         ("XF86MonBrightnessDown", lambda: backlight_manager.set(backlight_manager.get() - 0.05)),
         ("XF86MonBrightnessUp", lambda: backlight_manager.set(backlight_manager.get() + 0.05)),
-        ("XF86AudioRaiseVolume", lambda: os.system("amixer sset Master 5%+")),
-        ("XF86AudioLowerVolume", lambda: os.system("amixer sset Master 5%-")),
+        ("XF86AudioRaiseVolume", lambda: os.system("amixer sset Master 5%+ && paplay /usr/share/sounds/gnome/default/alerts/drip.ogg")),
+        ("XF86AudioLowerVolume", lambda: os.system("amixer sset Master 5%-&& paplay /usr/share/sounds/gnome/default/alerts/drip.ogg")),
         ("XF86AudioMute", lambda: pactl.mute()),
         ("XF86AudioPlay", lambda: os.system("playerctl play-pause &")),
         ("M-q", lambda: layout.close_focused_view()),
 
-        ("M-p", lambda: layout.ensure_locked(dim=True)),
+        ("M-p", lambda: os.system("~/.config/wofi/scripts/wofi-power.sh &")),
         ("M-P", lambda: layout.terminate()),
         ("M-C", lambda: layout.update_config()),
 
         ("M-f", lambda: layout.toggle_fullscreen()),
+        ("M-F", lambda: layout.toggle_focused_view_floating()),
 
         ("ModPress", lambda: layout.toggle_overview()),
         ("Print", lambda: os.system('grim ~/Pictures/screen-"$(date +%s)".png &')),
@@ -130,7 +132,7 @@ def rules(view):
         "pavucontrol", "blueman-manager", "gnome-control-center"
     )
     blur_apps = (
-        "kitty", "wofi", "waybar"
+        "kitty", "waybar"
     )
     if view.app_id in float_apps:
         return common_rules

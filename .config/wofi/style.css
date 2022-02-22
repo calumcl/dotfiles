@@ -1,55 +1,55 @@
-* {
-    font-family:  'Lato', 'Droid Sans Mono Nerd Font', sans-serif;
-    font-size: 20px;
-    font-weight: 600;
+/* ::root{ */
+/*     --accent: #5291e2; */
+/*     --dark: #383C4A; */
+/*     --light: #7C818C; */
+/*     --ld: #404552; */
+/*     --dl: #4B5162 */
+/*     --white: white; */
+/* } */
+
+*{
+    font-family: monospace;
 }
 
-
-#window {
-    margin: 0px;
-    border: 2px solid;
-    border-color: rgb(235, 77, 129);
-    border-radius: 25px;
-    background-color: rgb(37, 38, 51);
-    color:  rgb(235, 77, 129);
+window {
+    background-color: #7C818C;
 }
 
 #input {
-    margin: 15px;
-    background-color: rgb(112, 122, 137);
-    color: rgb(37, 38, 51);
-    border-radius: 25px;
-    border: 2px solid rgb(52, 64, 76);
+    margin: 5px;
+    border-radius: 0px;
+    border: none;
+    border-bottom: 3px solid black;
+    background-color: #383C4A;
+    color: white;
+}
+
+#inner-box {
+    background-color: #383C4A;
+
+}
+
+#outer-box {
+    margin: 5px;
+    padding:20px;
+    background-color: #383C4A;
 }
 
 #scroll {
-    margin-bottom: 15px;
 }
 
-#entry {
-    margin: 0px 15px;
+#text {
+padding: 5px;
+color: white;
+}
+
+#entry:nth-child(even){
+    background-color: #404552;
 }
 
 #entry:selected {
-    background-color: rgb(245, 98, 36);
-    border-radius: 25px;
-    border: none;
-    outline: none;
+    background-color: #5291e2;
 }
 
-#entry > box {
-    margin-left: 16px;
-}
-
-#entry image {
-    padding-right: 10px;
-}
-
-#colors {
-    color: rgb(37, 38, 51);
-    color: rgb(52, 64, 76);
-    color: rgb(76, 90, 107);
-    color: rgb(112, 122, 137);
-    color: rgb(235, 77, 129);
-    color: rgb(245, 98, 36);
+#text:selected {
 }
