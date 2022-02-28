@@ -82,3 +82,7 @@ export PATH=${PATH}:$HOME/.local/bin/hlint:$HOME/.local/bin:$HOME/.emacs.d/bin:$
 # android path stuff
 export ANDROID_HOME=$HOME/Android/Sdk
 export PATH=${PATH}:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

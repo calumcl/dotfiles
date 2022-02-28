@@ -4,7 +4,7 @@
     "height": 24, // Waybar height
     // "width": 1366, // Waybar width
     // Choose the order of the modules
-    "modules-left": ["cpu", "memory", "custom/notification"],
+    "modules-left": ["cpu", "memory", "custom/ppd", "custom/notification"],
     "modules-center": ["custom/waybar-mpris"],
     "modules-right": ["pulseaudio", "network", "backlight", "battery", "tray", "clock"],
     "tray": {
@@ -20,7 +20,11 @@
             "default": "🔔"
         },
         "exec": "swaync-client -c | grep -vw 0",
-        "on-click": "swaync-client -t -sw"
+        "on-click": "swaync-client -t -sw",
+    },
+    "custom/ppd": {
+        "format": "↯",
+        "on-click": "~/.config/wofi/scripts/power-profiles.sh"
     },
     "clock": {
         "format-alt": "{:%Y-%m-%d}"

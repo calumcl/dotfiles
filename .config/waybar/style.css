@@ -33,7 +33,7 @@ window#waybar {
     border-bottom: 3px solid white;
 }
 
-#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-waybar-mpris, #tray, #mode, #custom-settings {
+#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-waybar-mpris, #custom-ppd, #tray, #mode, #custom-settings {
     padding: 0 3px;
     margin: 0 2px;
 }
