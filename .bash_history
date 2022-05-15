@@ -260,3 +260,8 @@ exit
 source /home/calum/anaconda3/bin/activate
 conda activate cs-310
 exit
+alias
+alias arch='uname -m'
+exit
+echo $PATH
+exit
