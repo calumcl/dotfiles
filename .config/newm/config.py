@@ -31,9 +31,7 @@ def on_startup():
         "eval $(gnome-keyring-daemon --start)",
         "export SSH_AUTH_SOCK",
         "blueman-applet",
-        "mattermost-desktop",
         "caprine",
-        "evolution",
         "battery-low-notify",
     )
 
@@ -48,14 +46,6 @@ pactl = PaCtl(0, wob_runner)
 backlight_manager = BacklightManager(anim_time=1., bar_display=wob_runner)
 
 def on_reconfigure():
-    gnome_schema = 'org.gnome.desktop.interface'
-    wm_service_extra_config = (
-        f"gsettings set {gnome_schema} gtk-theme 'Materia-compact'",  # change to the theme of your choice
-        f"gsettings set {gnome_schema} icon-theme 'Papirus'",  # change to the icon of your choice
-        f"gsettings set {gnome_schema} cursor-theme 'Adwaita'",  # change to the cursor of your choice
-        f"gsettings set {gnome_schema} font-name 'Cantarell 10'",  # change to the font of your choice
-    )
-
     for config in wm_service_extra_config:
         config = f"{config} &"
         os.system(config)

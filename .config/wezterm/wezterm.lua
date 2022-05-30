@@ -4,7 +4,15 @@ return {
       family="Iosevka",
       harfbuzz_features= {"calt"}
     }),
-  color_scheme= "lovelace",
+  color_scheme= "Hopscotch.256",
   use_fancy_tab_bar= true,
-  window_decorations= "RESIZE"
+  window_decorations= "RESIZE",
+  keys = {
+    {key="Enter", mods="SUPER",
+      action=wezterm.action{SplitVertical={domain="CurrentPaneDomain"}}},
+    {key="Enter", mods="SUPER|SHIFT",
+      action=wezterm.action{SplitHorizontal={domain="CurrentPaneDomain"}}},
+    {key="q", mods="SUPER|SHIFT", action=wezterm.action{CloseCurrentPane={confirm=true}}},
+  },
 }
+

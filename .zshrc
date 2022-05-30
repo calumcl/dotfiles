@@ -42,6 +42,8 @@ if ! zgenom saved; then
     zgenom loadall <<EOPLUGINS
         zsh-users/zsh-history-substring-search
         Bhupesh-V/ugit
+        peterhurford/git-it-on.zsh
+        unixorn/warhol.plugin.zsh
         chrissicool/zsh-256color
 EOPLUGINS
     # ^ can't indent this EOPLUGINS
@@ -93,3 +95,8 @@ export NVM_DIR="$HOME/.nvm"
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 source /usr/share/nvm/init-nvm.sh
+
+# colorising of commands
+alias ls='ls --color -C'
+[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
+
